@@ -4,6 +4,15 @@ A simple Budget Planner web application built using React.
 This project helps users track their income and expenses and manage their monthly budget efficiently.
 
 ---
+#Team 
+
+-Devendra 
+-Aditya 
+-Ayushman
+-Aryan
+-Ankush
+
+---
 
 ## Features
 
