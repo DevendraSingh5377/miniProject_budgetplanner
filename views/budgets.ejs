@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Your Budgets</h2>
+<form action="/budgets" method="POST">
+  <input type="text" name="category" placeholder="Category" required />
+  <input type="number" name="amount" placeholder="Amount" required />
+  <button type="submit">Add Budget</button>
+</form>
+
+<ul>
+  <% budgets.forEach(b => { %>
+    <li><%= b.category %>: <%= b.amount %></li>
+  <% }) %>
+</ul>
+
+</body>
+</html>

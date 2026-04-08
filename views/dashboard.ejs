@@ -1,0 +1,100 @@
+<div class="container my-5">
+  <h2 class="mb-4">Welcome, <%= user.name %>!</h2>
+
+  <!-- Flash Messages -->
+  <% if (error && error.length > 0) { %>
+    <div class="alert alert-danger show"><%= error %></div>
+  <% } %>
+  <% if (success && success.length > 0) { %>
+    <div class="alert alert-success show"><%= success %></div>
+  <% } %>
+
+  <!-- Summary Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-bg-success shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Total Income</h5>
+          <p class="fs-4"><%= totalIncome %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-bg-danger shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Total Expenses</h5>
+          <p class="fs-4"><%= totalExpense %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-bg-info shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Remaining Budget</h5>
+          <p class="fs-4"><%= remainingBudget %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-column layout -->
+  <div class="row">
+    <!-- Left: Add Transaction Form -->
+    <div class="col-md-6">
+      <h3 class="mb-3">Add Income/Expense</h3>
+      <form action="/transactions/add" method="POST">
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <input type="text" name="description" id="description" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="amount" class="form-label">Amount</label>
+          <input type="number" name="amount" id="amount" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="type" class="form-label">Type</label>
+          <select name="type" id="type" class="form-select" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Transaction</button>
+      </form>
+    </div>
+
+    <!-- Right: Transactions List -->
+    <div class="col-md-6">
+      <h3 class="mb-3">All Transactions</h3>
+      <% if (transactions.length > 0) { %>
+        <ul class="list-group">
+          <% transactions.forEach(t => { %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                <% if (t.type === 'expense') { %>
+                  <span class="text-danger">Expense:</span>
+                <% } else { %>
+                  <span class="text-success">Income:</span>
+                <% } %>
+                <%= t.description %>
+              </span>
+              <span class="fw-bold <%= t.type === 'expense' ? 'text-danger' : 'text-success' %>">
+                <%= t.type === 'expense' ? '-' : '+' %><%= t.amount %>
+              </span>
+
+              <form action="/transactions/delete/<%= t._id %>" method="POST" style="margin:0;">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p class="text-muted">No transactions recorded yet.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Logout -->
+  <div class="text-center mt-4">
+    <a href="/logout" class="btn btn-outline-secondary">Logout</a>
+  </div>
+</div>
