@@ -1,34 +1,53 @@
+<div class="row g-0">
+  <!-- Left side: marketing -->
+  <div class="col-md-6 bg-light d-flex flex-column justify-content-center p-5">
+    <h1 class="fw-bold">Plan Your Budget</h1>
+    <h4 class="text-primary">Track</h4>
+    <h4 class="text-success">Save</h4>
+    <h4 class="text-danger">Grow</h4>
+    <p class="mt-3">Manage your income & expenses easily with our smart Budget Planner Dashboard.</p>
 
+    <div class="mt-4">
+      <div class="mb-2"><strong>Track Expenses</strong> – Monitor every transaction in one place</div>
+      <div class="mb-2"><strong>Smart Insights</strong> – Get summaries & balance updates instantly</div>
+      <div class="mb-2"><strong>Stay Organized</strong> – Plan, save & achieve your financial goals</div>
+      <div class="mb-2"><strong>Secure & Private</strong> – Your data stays safe</div>
+    </div>
+  </div>
 
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <h2 class="mb-4">Create Your Account</h2>
+  <!-- Right side: signup form -->
+  <div class="col-md-6 d-flex align-items-center justify-content-center p-5 bg-white">
+    <div class="w-100" style="max-width: 400px;">
+      <h2 class="mb-4">Create an Account</h2>
+      <p class="text-muted">Join us to manage your finances easily</p>
 
-    <% if (error) { %>
-      <div class="alert alert-danger"><%= error %></div>
-    <% } %>
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
 
-    <form action="/signup" method="POST" class="card card-body shadow-sm">
-      <div class="mb-3">
-        <label for="name" class="form-label">Full Name</label>
-        <input type="text" id="name" name="name" class="form-control" required />
-      </div>
+      <form action="/signup" method="POST">
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name or Username</label>
+          <input type="text" id="name" name="name" class="form-control" required />
+        </div>
 
-      <div class="mb-3">
-        <label for="email" class="form-label">Email Address</label>
-        <input type="email" id="email" name="email" class="form-control" required />
-      </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" id="email" name="email" class="form-control" required />
+        </div>
 
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-control" required />
-      </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" id="password" name="password" class="form-control" required />
+            <span class="input-group-text"><i class="bi bi-eye"></i></span>
+          </div>
+        </div>
 
-      <button type="submit" class="btn btn-success w-100">Sign Up</button>
-    </form>
+        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+      </form>
 
-    <p class="mt-3 text-center">
-      Already have an account? <a href="/login">Login here</a>.
-    </p>
+      <p class="mt-3 text-center">Already have an account? <a href="/login">Login</a></p>
+    </div>
   </div>
 </div>

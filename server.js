@@ -41,6 +41,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from /public
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // Make user available in all views
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;

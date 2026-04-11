@@ -1,100 +1,128 @@
-<div class="container my-5">
-  <h2 class="mb-4">Welcome, <%= user.name %>!</h2>
-
-  <!-- Flash Messages -->
-  <% if (error && error.length > 0) { %>
-    <div class="alert alert-danger show"><%= error %></div>
-  <% } %>
-  <% if (success && success.length > 0) { %>
-    <div class="alert alert-success show"><%= success %></div>
-  <% } %>
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>Budget Planner</h2>
+      <p class="subtitle">Track your money, grow your wealth</p>
+    </div>
+    <a href="/transactions/add" class="btn btn-primary">+ Add Transaction</a>
+  </header>
 
   <!-- Summary Cards -->
-  <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="card text-bg-success shadow-sm">
-        <div class="card-body text-center">
-          <h5 class="card-title">Total Income</h5>
-          <p class="fs-4"><%= totalIncome %></p>
-        </div>
-      </div>
+  <section class="summary-cards mb-4">
+    <div class="card income">
+      <h5>Income</h5>
+      <p>₹<%= totalIncome %></p>
     </div>
-    <div class="col-md-4">
-      <div class="card text-bg-danger shadow-sm">
-        <div class="card-body text-center">
-          <h5 class="card-title">Total Expenses</h5>
-          <p class="fs-4"><%= totalExpense %></p>
-        </div>
-      </div>
+    <div class="card expense">
+      <h5>Expenses</h5>
+      <p>₹<%= totalExpense %></p>
     </div>
-    <div class="col-md-4">
-      <div class="card text-bg-info shadow-sm">
-        <div class="card-body text-center">
-          <h5 class="card-title">Remaining Budget</h5>
-          <p class="fs-4"><%= remainingBudget %></p>
-        </div>
-      </div>
+    <div class="card balance">
+      <h5>Balance</h5>
+      <p>₹<%= remainingBudget %></p>
     </div>
-  </div>
+  </section>
 
-  <!-- Two-column layout -->
-  <div class="row">
-    <!-- Left: Add Transaction Form -->
+  <div class="row g-4">
+    <!-- Spending Breakdown -->
     <div class="col-md-6">
-      <h3 class="mb-3">Add Income/Expense</h3>
-      <form action="/transactions/add" method="POST">
-        <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
-          <input type="text" name="description" id="description" class="form-control" required>
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-bold">Spending Breakdown</div>
+        <div class="card-body d-flex justify-content-center">
+          <canvas id="spendingChart"></canvas>
         </div>
-        <div class="mb-3">
-          <label for="amount" class="form-label">Amount</label>
-          <input type="number" name="amount" id="amount" class="form-control" required>
-        </div>
-        <div class="mb-3">
-          <label for="type" class="form-label">Type</label>
-          <select name="type" id="type" class="form-select" required>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Transaction</button>
-      </form>
+      </div>
     </div>
 
-    <!-- Right: Transactions List -->
-    <div class="col-md-6">
-      <h3 class="mb-3">All Transactions</h3>
-      <% if (transactions.length > 0) { %>
-        <ul class="list-group">
-          <% transactions.forEach(t => { %>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <span>
-                <% if (t.type === 'expense') { %>
-                  <span class="text-danger">Expense:</span>
-                <% } else { %>
-                  <span class="text-success">Income:</span>
-                <% } %>
-                <%= t.description %>
-              </span>
-              <span class="fw-bold <%= t.type === 'expense' ? 'text-danger' : 'text-success' %>">
-                <%= t.type === 'expense' ? '-' : '+' %><%= t.amount %>
-              </span>
-
-              <form action="/transactions/delete/<%= t._id %>" method="POST" style="margin:0;">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-              </form>
-            </li>
-          <% }) %>
-        </ul>
-      <% } else { %>
-        <p class="text-muted">No transactions recorded yet.</p>
-      <% } %>
-    </div>
-  </div>
-
-  <!-- Logout -->
-  <div class="text-center mt-4">
-    <a href="/logout" class="btn btn-outline-secondary">Logout</a>
+    <!-- Recent Transactions -->
+<div class="col-md-6">
+  <div class="card shadow-sm h-100">
+    <div class="card-header fw-bold">Recent Transactions</div>
+    <ul class="list-group list-group-flush">
+      <% transactions.forEach(t => { 
+        let emoji = "";
+        switch(t.category) {
+          case "Salary": emoji = "💰"; break;
+          case "Food & Dining": emoji = "🍽️"; break;
+          case "Transport": emoji = "🚗"; break;
+          case "Entertainment": emoji = "🎬"; break;
+          case "Shopping": emoji = "🛍️"; break;
+          case "Health": emoji = "💊"; break;
+          case "Education": emoji = "📚"; break;
+          case "Utilities": emoji = "💡"; break;
+          default: emoji = "💳"; // fallback
+        }
+      %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <%= emoji %> <strong><%= t.description %></strong> — <%= t.category %>
+          </div>
+          <span class="fw-bold <%= t.type === 'income' ? 'income-text' : 'expense-text' %>">
+            <%= t.type === 'income' ? '+' : '-' %>₹<%= t.amount %>
+          </span>
+        </li>
+      <% }) %>
+    </ul>
   </div>
 </div>
+
+
+  <!-- Add Transaction -->
+  <section id="addTransactionForm" class="add-transaction mt-5">
+    <h4>Add Transaction</h4>
+    <form action="/transactions/add" method="POST">
+      <div class="form-group mb-3">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" class="form-control" required />
+      </div>
+      <div class="form-group mb-3">
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" name="amount" class="form-control" required />
+      </div>
+      <div class="form-group mb-3">
+        <label for="type">Type</label>
+        <select id="type" name="type" class="form-select" required>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Add Transaction</button>
+    </form>
+  </section>
+
+
+<!-- Chart.js -->
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Prepare data from EJS safely
+  const categories = <%- JSON.stringify(transactions.map(function(t){ return t.category; })) %>;
+  const amounts = <%- JSON.stringify(transactions.map(function(t){ return t.amount; })) %>;
+
+  const ctx = document.getElementById('spendingChart').getContext('2d');
+  const spendingChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: categories,
+      datasets: [{
+        data: amounts,
+        backgroundColor: [
+          '#007bff', // Blue
+          '#28a745', // Green
+          '#dc3545', // Red
+          '#ffc107', // Yellow
+          '#17a2b8', // Teal
+          '#6f42c1', // Purple
+          '#fd7e14'  // Orange
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '70%' // compress donut size
+    }
+  });
+</script>
+

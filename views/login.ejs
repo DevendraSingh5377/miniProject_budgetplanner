@@ -1,26 +1,55 @@
+<div class="row g-0">
+  <!-- Left side: promotional content -->
+  <div class="col-md-6 bg-light d-flex flex-column justify-content-center p-5">
+    <h1 class="fw-bold">Budget Planner</h1>
+    <h4 class="text-primary">Track</h4>
+    <h4 class="text-success">Save</h4>
+    <h4 class="text-danger">Grow</h4>
+    <p class="mt-3">Manage your income & expenses easily with our smart Budget Planner Dashboard.</p>
 
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <h2 class="mb-4">Login to Your Account</h2>
+    <div class="mt-4">
+      <div class="mb-2"><strong>Track Expenses</strong> – Monitor every transaction in one place</div>
+      <div class="mb-2"><strong>Smart Insights</strong> – Get summaries & balance updates instantly</div>
+      <div class="mb-2"><strong>Stay Organized</strong> – Plan, save & achieve your financial goals</div>
+      <div class="mb-2"><strong>Real-time Updates</strong></div>
+      <div class="mb-2"><strong>Secure & Private</strong></div>
+      <div class="mb-2"><strong>Fast & Easy</strong></div>
+    </div>
+  </div>
 
-    <% if (error) { %>
-      <div class="alert alert-danger"><%= error %></div>
-    <% } %>
+  <!-- Right side: login form -->
+  <div class="col-md-6 d-flex align-items-center justify-content-center p-5 bg-white">
+    <div class="w-100" style="max-width: 400px;">
+      <h2 class="mb-4">Welcome Back!</h2>
+      <p class="text-muted">Login to continue to your dashboard</p>
 
-    <form action="/login" method="POST" class="card card-body shadow-sm">
-      <div class="mb-3">
-        <label for="email" class="form-label">Email:</label>
-        <input type="email" id="email" name="email" class="form-control" required />
-      </div>
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
 
-      <div class="mb-3">
-        <label for="password" class="form-label">Password:</label>
-        <input type="password" id="password" name="password" class="form-control" required />
-      </div>
+      <form action="/login" method="POST">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email or Username</label>
+          <input type="text" id="email" name="email" class="form-control" required />
+        </div>
 
-      <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" id="password" name="password" class="form-control" required />
+            <span class="input-group-text"><i class="bi bi-eye"></i></span>
+          </div>
+        </div>
 
-    <p class="mt-3 text-center">Don’t have an account? <a href="/signup">Signup here</a>.</p>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="remember" name="remember">
+          <label class="form-check-label" for="remember">Remember me</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+
+      <p class="mt-3 text-center">Don’t have an account? <a href="/signup">Sign up</a></p>
+    </div>
   </div>
 </div>
