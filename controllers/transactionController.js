@@ -3,7 +3,8 @@ const Transaction = require('../models/Transaction');
 // POST: Add Transaction (income or expense)
 exports.addTransaction = async (req, res) => {
   try {
-    const { description, amount, type } = req.body;
+    // 👇 CRITICAL FIX: 'category' is now being extracted from the form request
+    const { description, amount, type, category } = req.body;
     const transactionAmount = Number(amount);
 
     // Calculate remaining budget
@@ -14,15 +15,17 @@ exports.addTransaction = async (req, res) => {
 
     // Validation: block if expense exceeds remaining budget
     if (type === 'expense' && transactionAmount > remainingBudget) {
-      req.flash('error', `Cannot add expense of ${transactionAmount}. Remaining budget is only ${remainingBudget}.`);
+      req.flash('error', `Cannot add expense of ₹${transactionAmount}. Remaining budget is only ₹${remainingBudget}.`);
       return res.redirect('/dashboard');
     }
 
+    // 👇 CRITICAL FIX: 'category' is passed into the new database entry
     const transaction = new Transaction({
       user: req.session.user._id,
       description,
       amount: transactionAmount,
-      type
+      type,
+      category: category || 'Uncategorized' // Safe fallback
     });
 
     await transaction.save();

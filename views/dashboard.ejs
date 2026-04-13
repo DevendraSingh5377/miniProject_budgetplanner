@@ -1,103 +1,414 @@
-<div class="dashboard-container">
-  <!-- Header -->
-  <header class="dashboard-header d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2>Budget Planner</h2>
-      <p class="subtitle">Track your money, grow your wealth</p>
+<div id="dashboardPage" class="dashboard-container">
+  <style>
+    /* 1. Hide the main navigation bar completely for this page */
+    nav.navbar {
+      display: none !important;
+    }
+
+    /* 2. SYNC THEME: Background gradient applied directly to the body */
+    body {
+      background: radial-gradient(circle at 100% 0%, #e6f7f4 0%, transparent 35%),
+                  radial-gradient(circle at 0% 100%, #eff6ff 0%, transparent 35%),
+                  radial-gradient(circle at 70% 60%, #ffe4e6 0%, transparent 25%),
+                  #f8fafc !important; 
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    }
+
+    /* 3. Expand the parent container from layout.ejs */
+    .container.mt-4 {
+      max-width: 96% !important; 
+      width: 100% !important;
+      margin-top: 0.5rem !important; 
+    }
+
+    /* 4. Ensure internal dashboard elements stretch to fill container */
+    .dashboard-container {
+      width: 100%;
+      margin: 0 auto;
+      padding-bottom: 0rem; 
+    }
+
+    /* Page and card specific styling */
+    .card {
+      background: white;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.02);
+      padding: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      background-color: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      border-radius: 20px 20px 0 0;
+      font-size: 0.9rem;
+      color: #0f172a;
+    }
+
+    /* Summary cards design - Accent Borders and Slimmer Profiles */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .summary-cards .card { text-align: left; padding: 1.25rem; } 
+    .summary-cards .card h5 { font-size: 0.9rem; font-weight: 500; color: #64748b; margin-bottom: 4px; } 
+    .summary-cards .card p { font-size: 1.6rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.2; }
+    
+    .summary-cards .income { border-top: 4px solid #22c55e; }
+    .summary-cards .income p { color: #22c55e; }
+    
+    .summary-cards .expense { border-top: 4px solid #ef4444; }
+    .summary-cards .expense p { color: #ef4444; }
+    
+    .summary-cards .balance { border-top: 4px solid #0f172a; }
+
+    /* Specific Transaction and chart text styling */
+    #spendingChart { max-width: 100%; max-height: 250px !important; }
+    
+    /* SCROLLABLE TRANSACTIONS LIST */
+    .transaction-scroll-area {
+      max-height: 265px; 
+      overflow-y: auto;
+      padding-right: 5px; 
+    }
+    
+    /* Custom thin scrollbar for Webkit */
+    .transaction-scroll-area::-webkit-scrollbar { width: 6px; }
+    .transaction-scroll-area::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .transaction-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .transaction-scroll-area::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .list-group-item {
+      border: none;
+      border-bottom: 1px solid #f1f5f9;
+      padding: 1rem 0.5rem;
+    }
+
+    /* Pill Badges for Amounts */
+    .amount-pill {
+      padding: 6px 14px;
+      border-radius: 50rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .amount-pill.income {
+      background-color: #ecfdf5;
+      color: #16a34a;
+      border: 1px solid #a7f3d0;
+    }
+    .amount-pill.expense {
+      background-color: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    /* Delete Button Styling */
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #94a3b8; 
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      color: #ef4444; 
+    }
+
+    /* Modal Form styling */
+    .form-control { border-radius: 10px; border: 1px solid #e2e8f0; padding: 10px 15px;}
+    .btn-primary { background: #2563eb; border: none; padding: 12px; border-radius: 10px; font-weight: 600; }
+
+    /* Custom Dropdown Styling for Hover Colors */
+    .custom-type-btn {
+      background-color: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 15px;
+      text-align: left;
+      color: #64748b; 
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .custom-type-btn.selected { color: #0f172a; }
+    .custom-dropdown-menu {
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 8px;
+    }
+    .custom-dropdown-item {
+      border-radius: 6px;
+      padding: 8px 15px;
+      margin-bottom: 4px;
+      transition: all 0.2s;
+      color: #0f172a;
+    }
+    .hover-income:hover, .hover-category:hover { background-color: #22c55e !important; color: white !important; }
+    .hover-expense:hover { background-color: #ef4444 !important; color: white !important; }
+  </style>
+
+  <header class="dashboard-header d-flex justify-content-between align-items-center mb-4 text-white p-4 rounded-4 shadow-sm" style="background-color: #2563eb;">
+    <div class="d-flex align-items-center">
+        <div class="me-3 p-3 bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#2563eb" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
+            <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
+          </svg>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-1">Budget Planner Dashboard</h2>
+            <p class="subtitle text-white text-opacity-70 mb-0">Track your income and expenses</p>
+        </div>
     </div>
-    <a href="/transactions/add" class="btn btn-primary">+ Add Transaction</a>
+    
+    <% 
+      // Calculate initials dynamically
+      let initials = "U";
+      let fullName = "User";
+      if (user && user.name) {
+        fullName = user.name;
+        let names = fullName.trim().split(' ');
+        initials = names[0].charAt(0).toUpperCase() + (names.length > 1 ? names[names.length-1].charAt(0).toUpperCase() : '');
+      }
+    %>
+    <div class="dropdown">
+        <button class="btn btn-outline-light d-flex align-items-center rounded-pill px-3 py-2 profile-btn dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle fs-5 me-2" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+            </svg>
+            <%= initials %>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2" aria-labelledby="profileDropdown">
+            <li class="dropdown-header text-muted">
+                Signed in as <strong class="text-dark"><%= fullName %></strong>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center text-danger" href="/logout">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Log out
+                </a>
+            </li>
+        </ul>
+    </div>
   </header>
 
-  <!-- Summary Cards -->
   <section class="summary-cards mb-4">
     <div class="card income">
       <h5>Income</h5>
-      <p>₹<%= totalIncome %></p>
+      <p>₹<%= totalIncome.toLocaleString('en-IN') %></p>
     </div>
     <div class="card expense">
       <h5>Expenses</h5>
-      <p>₹<%= totalExpense %></p>
+      <p>₹<%= totalExpense.toLocaleString('en-IN') %></p>
     </div>
     <div class="card balance">
       <h5>Balance</h5>
-      <p>₹<%= remainingBudget %></p>
+      <p>₹<%= remainingBudget.toLocaleString('en-IN') %></p>
     </div>
   </section>
 
   <div class="row g-4">
-    <!-- Spending Breakdown -->
     <div class="col-md-6">
       <div class="card shadow-sm h-100">
         <div class="card-header fw-bold">Spending Breakdown</div>
-        <div class="card-body d-flex justify-content-center">
+        <div class="card-body d-flex justify-content-center align-items-center">
           <canvas id="spendingChart"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Recent Transactions -->
-<div class="col-md-6">
-  <div class="card shadow-sm h-100">
-    <div class="card-header fw-bold">Recent Transactions</div>
-    <ul class="list-group list-group-flush">
-      <% transactions.forEach(t => { 
-        let emoji = "";
-        switch(t.category) {
-          case "Salary": emoji = "💰"; break;
-          case "Food & Dining": emoji = "🍽️"; break;
-          case "Transport": emoji = "🚗"; break;
-          case "Entertainment": emoji = "🎬"; break;
-          case "Shopping": emoji = "🛍️"; break;
-          case "Health": emoji = "💊"; break;
-          case "Education": emoji = "📚"; break;
-          case "Utilities": emoji = "💡"; break;
-          default: emoji = "💳"; // fallback
-        }
-      %>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <%= emoji %> <strong><%= t.description %></strong> — <%= t.category %>
-          </div>
-          <span class="fw-bold <%= t.type === 'income' ? 'income-text' : 'expense-text' %>">
-            <%= t.type === 'income' ? '+' : '-' %>₹<%= t.amount %>
-          </span>
-        </li>
-      <% }) %>
-    </ul>
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+          <span>Recent Transactions</span>
+          <button type="button" class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addTransactionModal" style="padding: 6px 16px;">
+            + Add Transaction
+          </button>
+        </div>
+        
+        <ul class="list-group list-group-flush transaction-scroll-area mt-2">
+          <% transactions.forEach(t => { 
+            // Fallback for missing backend category data (affects old entries)
+            let safeCategory = t.category || "Uncategorized";
+            let emoji = "";
+            
+            switch(safeCategory) {
+              case "Salary": emoji = "💰"; break;
+              case "Food & Dining": emoji = "🍔"; break;
+              case "Transport": emoji = "🚗"; break;
+              case "Entertainment": emoji = "🎬"; break;
+              case "Shopping": emoji = "🛍️"; break;
+              case "Health": emoji = "💊"; break;
+              case "Education": emoji = "📚"; break;
+              case "Utilities": emoji = "⚡"; break;
+              default: emoji = "💳"; // fallback
+            }
+            
+            let dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              
+              <div class="d-flex align-items-center">
+                <div class="fs-4 me-3"><%= emoji %></div>
+                <div>
+                  <div class="fw-bold" style="color: #0f172a; font-size: 0.95rem; margin-bottom: 2px;">
+                    <%= t.description %>
+                  </div>
+                  <div class="text-muted" style="font-size: 0.8rem;">
+                    <%= dateStr %> · <%= safeCategory %>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="d-flex align-items-center">
+                <span class="amount-pill <%= t.type === 'income' ? 'income' : 'expense' %> me-3">
+                  <%= t.type === 'income' ? '+' : '-' %>₹<%= t.amount.toLocaleString('en-IN') %>
+                </span>
+                <form action="/transactions/delete/<%= t._id %>" method="POST" class="mb-0">
+                  <button type="submit" class="delete-btn" aria-label="Delete">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                    </svg>
+                  </button>
+                </form>
+              </div>
+              
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
   </div>
+
+  <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+        <div class="modal-header border-bottom-0 pb-0 mt-2 mx-2">
+          <h5 class="modal-title fw-bold" id="addTransactionModalLabel" style="color: #0f172a;">Add Transaction</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body p-4">
+          <form id="transactionSubmitForm" action="/transactions/add" method="POST">
+            
+            <div class="form-group mb-3">
+              <label for="description" class="mb-1 text-muted" style="font-size: 0.9rem;">Description</label>
+              <input type="text" id="description" name="description" class="form-control" required />
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="amount" class="mb-1 text-muted" style="font-size: 0.9rem;">Amount</label>
+              <input type="number" id="amount" name="amount" class="form-control" required />
+            </div>
+            
+            <div class="form-group mb-3">
+              <label class="mb-1 text-muted" style="font-size: 0.9rem;">Category</label>
+              <div class="dropdown w-100">
+                <button class="btn custom-type-btn dropdown-toggle" type="button" id="categoryDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span id="categoryDisplayText">Select Category</span>
+                </button>
+                <ul class="dropdown-menu w-100 custom-dropdown-menu" style="max-height: 200px; overflow-y: auto;">
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Salary">💰 Salary</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Food & Dining">🍔 Food & Dining</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Utilities">⚡ Utilities</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Shopping">🛍️ Shopping</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Health">💊 Health</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Education">📚 Education</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Transport">🚗 Transport</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-category-item hover-category" href="#" data-val="Entertainment">🎬 Entertainment</a></li>
+                </ul>
+              </div>
+              <input type="hidden" id="hiddenCategoryInput" name="category">
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="mb-1 text-muted" style="font-size: 0.9rem;">Type</label>
+              <div class="dropdown w-100">
+                <button class="btn custom-type-btn dropdown-toggle" type="button" id="typeDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span id="typeDisplayText">Income/Expense</span>
+                </button>
+                <ul class="dropdown-menu w-100 custom-dropdown-menu">
+                  <li><a class="dropdown-item custom-dropdown-item custom-type-select hover-income" href="#" data-val="income">Income</a></li>
+                  <li><a class="dropdown-item custom-dropdown-item custom-type-select hover-expense" href="#" data-val="expense">Expense</a></li>
+                </ul>
+              </div>
+              <input type="hidden" id="hiddenTypeInput" name="type">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2 shadow-sm rounded-pill py-2">Add Transaction</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-
-  <!-- Add Transaction -->
-  <section id="addTransactionForm" class="add-transaction mt-5">
-    <h4>Add Transaction</h4>
-    <form action="/transactions/add" method="POST">
-      <div class="form-group mb-3">
-        <label for="description">Description</label>
-        <input type="text" id="description" name="description" class="form-control" required />
-      </div>
-      <div class="form-group mb-3">
-        <label for="amount">Amount</label>
-        <input type="number" id="amount" name="amount" class="form-control" required />
-      </div>
-      <div class="form-group mb-3">
-        <label for="type">Type</label>
-        <select id="type" name="type" class="form-select" required>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Add Transaction</button>
-    </form>
-  </section>
-
-
-<!-- Chart.js -->
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  // Prepare data from EJS safely
-  const categories = <%- JSON.stringify(transactions.map(function(t){ return t.category; })) %>;
+  // --- 1. Custom Dropdown Interaction Logic (Type) ---
+  const typeDropdownItems = document.querySelectorAll('.custom-type-select');
+  const typeDisplay = document.getElementById('typeDisplayText');
+  const hiddenTypeInput = document.getElementById('hiddenTypeInput');
+  const typeBtn = document.getElementById('typeDropdownBtn');
+
+  typeDropdownItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      const val = this.getAttribute('data-val');
+      const text = this.innerText;
+      
+      typeDisplay.innerText = text;
+      typeBtn.classList.add('selected');
+      hiddenTypeInput.value = val;
+    });
+  });
+
+  // --- 2. Custom Dropdown Interaction Logic (Category) ---
+  const categoryDropdownItems = document.querySelectorAll('.custom-category-item');
+  const categoryDisplay = document.getElementById('categoryDisplayText');
+  const hiddenCategoryInput = document.getElementById('hiddenCategoryInput');
+  const categoryBtn = document.getElementById('categoryDropdownBtn');
+
+  categoryDropdownItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      const val = this.getAttribute('data-val');
+      // Remove emoji for display text
+      const text = this.innerText.replace(/[\u{1F300}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E0}-\u{1F1FF}]/gu, '').trim();
+      
+      categoryDisplay.innerText = text;
+      categoryBtn.classList.add('selected');
+      hiddenCategoryInput.value = val;
+    });
+  });
+
+  // Form Validation
+  const transactionForm = document.getElementById('transactionSubmitForm');
+  transactionForm.addEventListener('submit', function(e) {
+    if(!hiddenTypeInput.value || !hiddenCategoryInput.value) {
+      e.preventDefault();
+      alert("Please select both a Type and a Category before adding a transaction.");
+    }
+  });
+
+  // --- 3. Chart.js Logic ---
+  // Safely map categories so "null" isn't rendered in the chart if missing backend data
+  const categories = <%- JSON.stringify(transactions.map(function(t){ return t.category || "Uncategorized"; })) %>;
   const amounts = <%- JSON.stringify(transactions.map(function(t){ return t.amount; })) %>;
 
   const ctx = document.getElementById('spendingChart').getContext('2d');
@@ -108,21 +419,14 @@
       datasets: [{
         data: amounts,
         backgroundColor: [
-          '#007bff', // Blue
-          '#28a745', // Green
-          '#dc3545', // Red
-          '#ffc107', // Yellow
-          '#17a2b8', // Teal
-          '#6f42c1', // Purple
-          '#fd7e14'  // Orange
+          '#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#fd7e14'
         ]
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '70%' // compress donut size
+      cutout: '70%' 
     }
   });
 </script>
-

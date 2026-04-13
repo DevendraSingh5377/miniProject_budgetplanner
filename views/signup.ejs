@@ -1,53 +1,195 @@
-<div class="row g-0">
-  <!-- Left side: marketing -->
-  <div class="col-md-6 bg-light d-flex flex-column justify-content-center p-5">
-    <h1 class="fw-bold">Plan Your Budget</h1>
-    <h4 class="text-primary">Track</h4>
-    <h4 class="text-success">Save</h4>
-    <h4 class="text-danger">Grow</h4>
-    <p class="mt-3">Manage your income & expenses easily with our smart Budget Planner Dashboard.</p>
+<style>
+  /* Sharing the exact same robust layout styles as Login */
+  nav.navbar, footer.footer { display: none !important; }
+  
+  body.bg-light { 
+    background: radial-gradient(circle at 100% 0%, #e6f7f4 0%, transparent 35%),
+                radial-gradient(circle at 0% 100%, #eff6ff 0%, transparent 35%),
+                #f8fafc !important; 
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
 
-    <div class="mt-4">
-      <div class="mb-2"><strong>Track Expenses</strong> – Monitor every transaction in one place</div>
-      <div class="mb-2"><strong>Smart Insights</strong> – Get summaries & balance updates instantly</div>
-      <div class="mb-2"><strong>Stay Organized</strong> – Plan, save & achieve your financial goals</div>
-      <div class="mb-2"><strong>Secure & Private</strong> – Your data stays safe</div>
+  .auth-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1250px;
+    padding: 2rem;
+    gap: 4rem;
+  }
+
+  .auth-left { flex: 1; max-width: 650px; }
+
+  .header-brand { display: flex; align-items: center; font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 2.5rem; }
+  .brand-icon { background: #2563eb; color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
+
+  .tagline-pill { background: #eff6ff; color: #2563eb; border-radius: 20px; padding: 6px 16px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.5rem; }
+  .tagline-pill i { color: #eab308; }
+
+  .main-heading { font-size: 3.5rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin: 0 0 0.5rem 0; }
+  .sub-heading { font-size: 3rem; font-weight: 800; margin: 0 0 1.5rem 0; letter-spacing: -0.5px; }
+  
+  .c-blue { color: #2563eb; } .c-green { color: #22c55e; } .c-red { color: #ef4444; } .c-dot { color: #cbd5e1; font-size: 2rem; vertical-align: middle; margin: 0 8px; }
+
+  .desc-text { color: #64748b; font-size: 1.05rem; line-height: 1.6; margin-bottom: 2.5rem; max-width: 420px; }
+  .desc-text strong { color: #0f172a; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .feat-card { background: white; padding: 1.25rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.02); }
+  .feat-card.row-2 { display: flex; align-items: center; gap: 12px; padding: 1rem 1.25rem; }
+
+  .icon-box { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 1rem; }
+  .feat-card.row-2 .icon-box { margin-bottom: 0; }
+
+  .bg-b { background: #eff6ff; color: #2563eb; } .bg-g { background: #f0fdf4; color: #22c55e; } .bg-r { background: #fef2f2; color: #ef4444; }
+
+  .feat-title { font-weight: 700; font-size: 0.85rem; color: #0f172a; margin: 0 0 6px 0; }
+  .feat-card.row-2 .feat-title { margin: 0; font-size: 0.8rem; line-height: 1.3; }
+  .feat-desc { font-size: 0.75rem; color: #64748b; margin: 0; line-height: 1.4; }
+
+  /* Right Side: Auth Card */
+  .auth-right { width: 480px; flex-shrink: 0; }
+  .auth-box { background: white; border-radius: 24px; padding: 2.5rem 3rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
+
+  .tab-group { display: flex; margin-bottom: 2.5rem; border-bottom: 1px solid #e2e8f0; }
+  .tab-link { flex: 1; text-align: center; padding-bottom: 1rem; font-size: 1rem; font-weight: 600; color: #94a3b8; text-decoration: none; position: relative; }
+  .tab-link.active { color: #2563eb; }
+  .tab-link.active::after { content: ''; position: absolute; bottom: -1px; left: 15%; right: 15%; height: 2px; background: #2563eb; }
+
+  .form-title { text-align: center; font-size: 1.5rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
+  .form-sub { text-align: center; color: #64748b; font-size: 0.85rem; margin: 0 0 2rem 0; }
+
+  .input-wrap { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; padding: 0 1rem; margin-bottom: 1.25rem; height: 48px; transition: all 0.2s; }
+  .input-wrap:focus-within { border-color: #2563eb; background: white; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  .input-icon { color: #94a3b8; font-size: 1.1rem; }
+  .input-field { border: none; background: transparent; width: 100%; padding: 0 12px; color: #0f172a; outline: none; font-size: 0.9rem; }
+  .input-field::placeholder { color: #94a3b8; }
+  .eye-toggle { color: #94a3b8; cursor: pointer; padding: 5px; }
+
+  .submit-btn { width: 100%; background: #2563eb; color: white; border: none; border-radius: 12px; height: 48px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem;}
+  .submit-btn:hover { background: #1d4ed8; }
+
+  .form-footer { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: #64748b; }
+  .form-footer a { color: #2563eb; font-weight: 600; text-decoration: none; }
+
+  .page-footer { position: fixed; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.75rem; color: #94a3b8; }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<div class="header-brand" style="position: absolute; top: 2rem; left: 3rem;">
+  <div class="brand-icon"><i class="bi bi-briefcase-fill"></i></div>
+  Budget Planner
+</div>
+
+<div class="auth-wrapper">
+  <div class="auth-left">
+    <div class="tagline-pill">
+      <i class="bi bi-star-fill"></i> Take control of your finances
+    </div>
+
+    <h1 class="main-heading">Plan Your Budget</h1>
+    <h2 class="sub-heading">
+      <span class="c-blue">Track</span><span class="c-dot">•</span><span class="c-green">Save</span><span class="c-dot">•</span><span class="c-red">Grow</span>
+    </h2>
+
+    <p class="desc-text">
+      Manage your income & expenses easily with our smart<br>
+      <strong>Budget Planner Dashboard.</strong>
+    </p>
+
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="icon-box bg-b"><i class="bi bi-bar-chart-fill"></i></div>
+        <h6 class="feat-title">Track Expenses</h6>
+        <p class="feat-desc">Monitor every transaction in one place</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon-box bg-g"><i class="bi bi-pie-chart-fill"></i></div>
+        <h6 class="feat-title">Smart Insights</h6>
+        <p class="feat-desc">Get summaries & balance updates instantly</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon-box bg-r"><i class="bi bi-bell-fill"></i></div>
+        <h6 class="feat-title">Stay Organized</h6>
+        <p class="feat-desc">Plan, save & achieve your financial goals</p>
+      </div>
+      
+      <div class="feat-card row-2">
+        <div class="icon-box bg-b"><i class="bi bi-clock-history"></i></div>
+        <h6 class="feat-title">Real-time<br>Updates</h6>
+      </div>
+      <div class="feat-card row-2">
+        <div class="icon-box bg-g"><i class="bi bi-shield-check"></i></div>
+        <h6 class="feat-title">Secure &<br>Private</h6>
+      </div>
+      <div class="feat-card row-2">
+        <div class="icon-box bg-r"><i class="bi bi-lightning-charge-fill"></i></div>
+        <h6 class="feat-title">Fast &<br>Easy</h6>
+      </div>
     </div>
   </div>
 
-  <!-- Right side: signup form -->
-  <div class="col-md-6 d-flex align-items-center justify-content-center p-5 bg-white">
-    <div class="w-100" style="max-width: 400px;">
-      <h2 class="mb-4">Create an Account</h2>
-      <p class="text-muted">Join us to manage your finances easily</p>
+  <div class="auth-right">
+    <div class="auth-box">
+      <div class="tab-group">
+        <a href="/login" class="tab-link">Login</a>
+        <a href="/signup" class="tab-link active">Sign Up</a>
+      </div>
+
+      <h3 class="form-title">Create an Account</h3>
+      <p class="form-sub">Join us to manage your finances easily</p>
 
       <% if (error) { %>
-        <div class="alert alert-danger"><%= error %></div>
+        <div style="background: #fef2f2; color: #ef4444; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; text-align: center;">
+          <%= error %>
+        </div>
       <% } %>
 
       <form action="/signup" method="POST">
-        <div class="mb-3">
-          <label for="name" class="form-label">Full Name or Username</label>
-          <input type="text" id="name" name="name" class="form-control" required />
+        <div class="input-wrap">
+          <i class="bi bi-person input-icon"></i>
+          <input type="text" name="name" class="input-field" placeholder="Full Name or Username" required />
         </div>
 
-        <div class="mb-3">
-          <label for="email" class="form-label">Email Address</label>
-          <input type="email" id="email" name="email" class="form-control" required />
+        <div class="input-wrap">
+          <i class="bi bi-envelope input-icon"></i>
+          <input type="email" name="email" class="input-field" placeholder="Email Address" required />
         </div>
 
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <div class="input-group">
-            <input type="password" id="password" name="password" class="form-control" required />
-            <span class="input-group-text"><i class="bi bi-eye"></i></span>
-          </div>
+        <div class="input-wrap mb-4">
+          <i class="bi bi-lock input-icon"></i>
+          <input type="password" id="password" name="password" class="input-field" placeholder="Password" required />
+          <i class="bi bi-eye eye-toggle" id="togglePassword"></i>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+        <button type="submit" class="submit-btn">Create Account</button>
       </form>
 
-      <p class="mt-3 text-center">Already have an account? <a href="/login">Login</a></p>
+      <div class="form-footer">
+        Already have an account? <a href="/login">Login</a>
+      </div>
     </div>
   </div>
 </div>
+
+<div class="page-footer">
+  © 2026 Budget Planner. All rights reserved.
+</div>
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.classList.toggle('bi-eye');
+    this.classList.toggle('bi-eye-slash');
+  });
+</script>
