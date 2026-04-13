@@ -35,5 +35,5 @@ Budget Planner is a dynamic and user-friendly web application designed to help i
 ### Installation & Setup
 1. **Clone the repository:**
    ```bash
-   git clone <your-repository-url>
-   cd budget-planner
+   git clone https://github.com/DevendraSingh5377/miniProject_budgetplanner
+   cd miniProject_budgetplanner
