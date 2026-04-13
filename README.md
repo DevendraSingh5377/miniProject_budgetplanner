@@ -2,7 +2,7 @@
 
 Budget Planner is a dynamic and user-friendly web application designed to help individuals easily track their income, monitor their expenses, and maintain a clear overview of their personal finances. By providing intuitive visual insights and categorical breakdowns, the platform empowers users to make informed financial decisions and stay on top of their budgets.
 
-## Team: Budget Mate
+## Team Name: Budget Mate
 
 ### Team Members
 
@@ -11,7 +11,7 @@ Budget Planner is a dynamic and user-friendly web application designed to help i
 | Devendra Singh | 2400520100000 |
 | Aditya Pandey | 2400520100000 |
 | Ayushman Agrahari | 2400520100000 |
-| Aryan Shukla | 2400520100000 |
+| Aryan Shukla | 2400520100023 |
 | Ankush Singh | 2400520100000 |
 
 ---
