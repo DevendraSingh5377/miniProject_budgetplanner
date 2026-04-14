@@ -8,11 +8,11 @@ Budget Planner is a dynamic and user-friendly web application designed to help i
 
 | Name | Roll Number |
 | --- | --- |
-| Devendra Singh | 2400520100000 |
-| Aditya Pandey | 2400520100000 |
-| Ayushman Agrahari | 2400520100000 |
+| Devendra Singh | 2400520100033 |
+| Aditya Panday | 2400520100010 |
+| Ayushman Agrahari | 2400520100027 |
 | Aryan Shukla | 2400520100023 |
-| Ankush Singh | 2400520100000 |
+| Ankush Singh | 2400520100015 |
 
 ---
 
