@@ -2,17 +2,17 @@
 
 Budget Planner is a dynamic and user-friendly web application designed to help individuals easily track their income, monitor their expenses, and maintain a clear overview of their personal finances. By providing intuitive visual insights and categorical breakdowns, the platform empowers users to make informed financial decisions and stay on top of their budgets.
 
-## Team: Budget Mate
+## Team Name: Budget Mate
 
 ### Team Members
 
 | Name | Roll Number |
 | --- | --- |
-| Devendra Singh | 2400520100000 |
-| Aditya Pandey | 2400520100000 |
-| Ayushman Agrahari | 2400520100000 |
-| Aryan Shukla | 2400520100000 |
-| Ankush Singh | 2400520100000 |
+| Devendra Singh | 2400520100033 |
+| Aditya Panday | 2400520100010 |
+| Ayushman Agrahari | 2400520100027 |
+| Aryan Shukla | 2400520100023 |
+| Ankush Singh | 2400520100015 |
 
 ---
 
@@ -35,5 +35,5 @@ Budget Planner is a dynamic and user-friendly web application designed to help i
 ### Installation & Setup
 1. **Clone the repository:**
    ```bash
-   git clone <your-repository-url>
-   cd budget-planner
+   git clone https://github.com/DevendraSingh5377/miniProject_budgetplanner
+   cd miniProject_budgetplanner
