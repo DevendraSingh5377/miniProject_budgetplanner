@@ -1,4 +1,5 @@
 // server.js
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -61,10 +62,10 @@ app.use(flash());
 
 
 
-// Connect to local MongoDB directly
-mongoose.connect("mongodb://127.0.0.1:27017/budgetplanner2")
-  .then(() => console.log('✅ Local MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+// Connect to Cloud MongoDB via .env file
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ Cloud MongoDB connected!'))
+  .catch(err => console.error('❌ Cloud MongoDB connection error:', err));
 
 app.use('/', homeRoutes);
 
