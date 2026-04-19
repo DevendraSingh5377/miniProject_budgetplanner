@@ -36,14 +36,14 @@
       padding-bottom: 1rem; margin-bottom: 1rem;
     }
 
-    /* Dashboard Header & Primary Buttons (Blue) */
-    .dashboard-header-bg { background-color: #2563eb !important; }
-    .btn-primary { background: #2563eb !important; border: none; padding: 12px; border-radius: 10px; font-weight: 600; }
-    .btn-primary:hover { background: #1d4ed8 !important; }
+    /* Dashboard Header & Primary Buttons (Dark Green Theme) */
+    .dashboard-header-bg { background-color: #0f5132 !important; }
+    .btn-primary { background: #0f5132 !important; border: none; padding: 12px; border-radius: 10px; font-weight: 600; }
+    .btn-primary:hover { background: #0a3622 !important; }
 
     /* Add Transaction Header Button */
     .header-add-btn {
-      background-color: white; color: #2563eb; border: none;
+      background-color: white; color: #0f5132; border: none;
       font-weight: 700; padding: 8px 16px; border-radius: 50rem;
       transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
@@ -84,8 +84,8 @@
       text-align: center; border-radius: 10px; color: #64748b;
       font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
     }
-    .cmp-month:hover { background: #eff6ff; color: #2563eb; }
-    .cmp-month.active { background: #2563eb; color: white; box-shadow: 0 4px 6px -1px rgba(37,99,235,0.3); }
+    .cmp-month:hover { background: #e8f5e9; color: #0f5132; }
+    .cmp-month.active { background: #0f5132; color: white; box-shadow: 0 4px 6px -1px rgba(15,81,50,0.3); }
 
     /* Custom Month Picker Footer */
     .cmp-footer {
@@ -98,8 +98,8 @@
     }
     .cmp-footer-btn.clear { color: #64748b; }
     .cmp-footer-btn.clear:hover { background: #f1f5f9; color: #0f172a; }
-    .cmp-footer-btn.today { color: #2563eb; }
-    .cmp-footer-btn.today:hover { background: #eff6ff; }
+    .cmp-footer-btn.today { color: #0f5132; }
+    .cmp-footer-btn.today:hover { background: #e8f5e9; }
 
     /* ENHANCED EMPTY STATE STYLING */
     #emptyStateMessage { 
@@ -171,7 +171,7 @@
     .custom-dropdown-menu { border-radius: 10px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 8px; }
     .custom-dropdown-item { border-radius: 6px; padding: 8px 15px; margin-bottom: 4px; transition: all 0.2s; color: #0f172a; }
     
-    .hover-category:hover { background-color: #2563eb !important; color: white !important; } 
+    .hover-category:hover { background-color: #0f5132 !important; color: white !important; } 
     .hover-income:hover { background-color: #16a34a !important; color: white !important; }   
     .hover-expense:hover { background-color: #ef4444 !important; color: white !important; }  
   </style>
@@ -196,7 +196,7 @@
   <header class="dashboard-header d-flex justify-content-between align-items-center mb-4 text-white p-4 rounded-4 shadow-sm dashboard-header-bg">
     <div class="d-flex align-items-center">
         <div class="me-3 p-3 bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#2563eb" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#0f5132" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
             <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5z"/>
             <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
           </svg>
@@ -289,7 +289,7 @@
       <span class="feature-pill">🎯 Real-time Balance</span>
     </div>
     <p class="mt-4 fs-5" style="color: #64748b; font-weight: 500;">
-      Ready to take control? Click the <span class="badge bg-primary text-white px-3 py-2 fs-6 rounded-pill mx-1">+ Add Transaction</span> button above to start logging your finances.
+      Ready to take control? Click the <span class="badge text-white px-3 py-2 fs-6 rounded-pill mx-1" style="background-color: #0f5132;">+ Add Transaction</span> button above to start logging your finances.
     </p>
   </div>
 
@@ -323,7 +323,7 @@
         <div class="card shadow-sm h-100">
           <div class="card-header fw-bold border-0 d-flex justify-content-between align-items-center">
             <span>Spending Breakdown</span>
-            <a href="/breakdown" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" style="font-size: 0.8rem;">
+            <a href="/breakdown" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" style="font-size: 0.8rem; color: #0f5132; border-color: #0f5132;">
               <i class="bi bi-pie-chart-fill me-1"></i> Track Income/Expense
             </a>
           </div>
