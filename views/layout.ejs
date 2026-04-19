@@ -14,23 +14,27 @@
   <link rel="stylesheet" href="/css/dashboard.css">
 
   <style>
-    /* 🔥 MAIN FIX: Custom centered layout */
+    /* STICKY FOOTER FIX: Make the body a full-height flex column */
+    body {
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* 🔥 Custom centered layout */
     .page-wrapper {
       width: 100%;
       display: flex;
       justify-content: center;
+      flex: 1; /* 👈 THIS acts as a spring, pushing the footer to the bottom! */
     }
 
     .page-wrapper > * {
       width: 100%;
-      max-width: 1400px;   /* 🔥 controls side spacing */
+      max-width: 1500px;   /* controls side spacing */
       padding-left: 24px;
       padding-right: 24px;
-    }
-
-    /* Prevent unwanted scroll */
-    body {
-      overflow-x: hidden;
     }
   </style>
 </head>
@@ -53,7 +57,6 @@
     </div>
   </nav>
 
-  <!-- 🔥 FULL CONTROLLED WIDTH WRAPPER -->
   <div class="page-wrapper mt-1.5">
     <%- body %>
   </div>

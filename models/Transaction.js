@@ -16,7 +16,6 @@ const transactionSchema = new mongoose.Schema({
     required: true,
     enum: ['income', 'expense'] 
   },
-  // 👇 The new category field definition
   category: {
     type: String,
     required: true,
@@ -33,8 +32,10 @@ const transactionSchema = new mongoose.Schema({
     ],
     default: 'Uncategorized'
   },
+  // 👇 THE CRITICAL FIX: Telling Mongoose that 'date' is a valid field!
   date: {
     type: Date,
+    required: true,
     default: Date.now
   },
   user: {
