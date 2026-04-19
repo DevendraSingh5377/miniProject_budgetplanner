@@ -45,3 +45,22 @@ exports.getDashboard = async (req, res) => {
     });
   }
 };
+
+// GET Breakdown Page
+exports.getBreakdown = async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ user: req.session.user._id });
+    
+    res.render('breakdown', { 
+      layout: 'layout',
+      title: 'Financial Breakdown',
+      user: req.session.user,
+      transactions,
+      error: req.flash('error') || null,
+      success: req.flash('success') || null
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/dashboard');
+  }
+};

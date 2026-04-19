@@ -12,13 +12,6 @@
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
     }
 
-    /* Expand the parent container from layout.ejs */
-    .container.mt-4 {
-      max-width: 96% !important; 
-      width: 100% !important;
-      margin-top: 0.5rem !important; 
-    }
-
     /* Ensure internal dashboard elements stretch to fill container */
     .dashboard-container { 
       width: 100%; 
@@ -111,8 +104,8 @@
     /* ENHANCED EMPTY STATE STYLING */
     #emptyStateMessage { 
       text-align: center; 
-      flex: 1; /* pushes it to fill available vertical space */
-      display: flex; /* Will be toggled by JS to 'flex' instead of 'block' */
+      flex: 1; 
+      display: flex; 
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -260,12 +253,9 @@
         </div>
 
         <% 
-          let initials = "U";
           let fullName = "User";
           if (user && user.name) {
             fullName = user.name;
-            let names = fullName.trim().split(' ');
-            initials = names[0].charAt(0).toUpperCase() + (names.length > 1 ? names[names.length-1].charAt(0).toUpperCase() : '');
           }
         %>
         <div class="dropdown">
@@ -274,7 +264,7 @@
                   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                   <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                 </svg>
-                <%= initials %>
+                <%= fullName %>
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2" aria-labelledby="profileDropdown">
                 <li class="dropdown-header text-muted">Signed in as <strong class="text-dark"><%= fullName %></strong></li>
@@ -331,7 +321,12 @@
     <div class="row g-4">
       <div class="col-md-6">
         <div class="card shadow-sm h-100">
-          <div class="card-header fw-bold border-0">Spending Breakdown</div>
+          <div class="card-header fw-bold border-0 d-flex justify-content-between align-items-center">
+            <span>Spending Breakdown</span>
+            <a href="/breakdown" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" style="font-size: 0.8rem;">
+              <i class="bi bi-pie-chart-fill me-1"></i> Track Income/Expense
+            </a>
+          </div>
           <div class="card-body pt-0">
             <div class="row align-items-center h-100">
               <div class="col-sm-6 text-center">
@@ -436,7 +431,6 @@
   let currentViewYear = new Date().getFullYear();
 
   const headerMonthText = document.getElementById('headerMonthText');
-  const emptyMonthDisplay = document.getElementById('emptyMonthDisplay');
   const emptyStateHeading = document.getElementById('emptyStateHeading');
   const emptyStateMessage = document.getElementById('emptyStateMessage');
   const customMonthPicker = document.getElementById('customMonthPicker');
@@ -686,7 +680,7 @@
     
     // Hide dashboard and prompt selection
     document.getElementById('dashboardMainContent').style.display = 'none';
-    emptyStateMessage.style.display = 'flex'; // Use flex to retain centering
+    emptyStateMessage.style.display = 'flex'; 
     emptyStateHeading.innerHTML = '👆 Please select a month to view data';
     
     customMonthPicker.classList.remove('show');

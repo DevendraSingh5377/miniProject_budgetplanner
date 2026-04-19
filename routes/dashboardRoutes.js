@@ -6,4 +6,7 @@ const { ensureAuthenticated } = require('../middleware/authMiddleware');
 // Dashboard Route
 router.get('/dashboard', ensureAuthenticated, dashboardController.getDashboard);
 
+// NEW: Breakdown Route
+router.get('/breakdown', ensureAuthenticated, dashboardController.getBreakdown);
+
 module.exports = router;

@@ -1,0 +1,243 @@
+<div class="dashboard-container w-100 mx-auto pb-5">
+  <style>
+    nav.navbar { display: none !important; }
+    body {
+      background: radial-gradient(circle at 100% 0%, #e6f7f4 0%, transparent 35%),
+                  radial-gradient(circle at 0% 100%, #eff6ff 0%, transparent 35%),
+                  radial-gradient(circle at 70% 60%, #ffe4e6 0%, transparent 25%),
+                  #f8fafc !important; 
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    }
+    
+    .card { background: white; border: none; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); padding: 1.5rem; }
+    .dashboard-header-bg { background-color: #2563eb !important; }
+    
+    .drilldown-list-item { border: none; border-bottom: 1px solid #f1f5f9; padding: 1rem 0.5rem; transition: background 0.2s; }
+    .drilldown-list-item:hover { background-color: #f8fafc; border-radius: 8px; }
+    
+    /* Toggle switch styling */
+    .view-toggle { background: #f1f5f9; border-radius: 50rem; padding: 4px; display: inline-flex; }
+    .view-toggle-btn { background: transparent; border: none; padding: 8px 24px; border-radius: 50rem; font-weight: 600; color: #64748b; transition: all 0.2s; }
+    .view-toggle-btn.active { background: white; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+    #categoryDetailsContainer { display: none; } /* Hidden until slice is clicked */
+  </style>
+
+  <header class="d-flex justify-content-between align-items-center mb-4 text-white p-4 rounded-4 shadow-sm dashboard-header-bg">
+    <div class="d-flex align-items-center">
+      <a href="/dashboard" class="btn btn-outline-light rounded-circle p-2 me-4 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+        <i class="bi bi-arrow-left fs-5"></i>
+      </a>
+      <div class="me-3 p-3 bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#2563eb" class="bi bi-pie-chart-fill" viewBox="0 0 16 16">
+          <path d="M15.985 8.5H8.207l-5.5 5.5a8 8 0 0 0 13.277-5.5zM2 13.292A8 8 0 0 1 7.5.015v7.778l-5.5 5.5zM8.5.015V7.5h7.485A8.001 8.001 0 0 0 8.5.015z"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="fw-bold mb-1">Financial Breakdown</h2>
+        <p class="text-white text-opacity-70 mb-0">Analyze your cash flow</p>
+      </div>
+    </div>
+    
+    <div class="bg-white bg-opacity-25 rounded-pill px-4 py-2 fw-bold text-white shadow-sm border border-white border-opacity-25">
+      <i class="bi bi-calendar3 me-2"></i> <span id="displayMonthLabel">Loading...</span>
+    </div>
+  </header>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="card text-center" style="background-color: #d5ecd9; color: #137333; padding: 1rem !important;">
+        <h6 class="fw-bold mb-1 text-muted"><i class="bi bi-graph-up-arrow me-2"></i>Total Income</h6>
+        <h3 class="fw-bold mb-0">₹<span id="bdTotalIncome">0</span></h3>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-center" style="background-color: #fef2f2; color: #dc2626; padding: 1rem !important;">
+        <h6 class="fw-bold mb-1 text-muted"><i class="bi bi-graph-down-arrow me-2"></i>Total Expenses</h6>
+        <h3 class="fw-bold mb-0">₹<span id="bdTotalExpense">0</span></h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4 text-center">
+    <div class="d-flex justify-content-center mb-4">
+      <div class="view-toggle shadow-sm">
+        <button class="view-toggle-btn active" id="btnShowExpenses">Expenses</button>
+        <button class="view-toggle-btn" id="btnShowIncome">Income</button>
+      </div>
+    </div>
+    
+    <h4 class="fw-bold mb-2" style="color: #0f172a;" id="chartTitle">Expense Breakdown</h4>
+    <p class="text-muted small mb-4">Hover or click on a section to drill down into specific transactions.</p>
+    
+    <div class="d-flex justify-content-center mx-auto" style="position: relative; height: 250px; width: 100%; max-width: 500px;">
+      <canvas id="interactiveChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card" id="categoryDetailsContainer">
+    <h5 class="fw-bold mb-3 d-flex align-items-center pb-3 border-bottom" style="color: #0f172a;">
+      <span id="detailDot" style="display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:12px;"></span>
+      <span id="detailCategoryName">Category Name</span>
+      <span class="ms-auto text-muted fs-6 fw-normal" id="detailCategoryTotal">₹0.00</span>
+    </h5>
+    <ul class="list-group list-group-flush" id="detailTransactionList">
+      </ul>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const allTransactions = <%- JSON.stringify(transactions) || '[]' %>;
+  let chartInstance = null;
+  let currentChartType = 'expense'; // 'expense' or 'income'
+  let currentMonthTransactions = [];
+  
+  const chartColors = ['#f59e0b', '#8b5cf6', '#ec4899', '#0ea5e9', '#10b981', '#f43f5e', '#3b82f6', '#84cc16'];
+  const incomeColors = ['#16a34a', '#059669', '#0d9488', '#0891b2', '#0284c7'];
+
+  // Initialize Page Context
+  function initBreakdown() {
+    const savedStr = sessionStorage.getItem('budgetMate_savedMonth') || new Date().toISOString().substring(0, 7);
+    const [year, month] = savedStr.split('-');
+    
+    const d = new Date(year, parseInt(month) - 1, 1);
+    document.getElementById('displayMonthLabel').innerText = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+    currentMonthTransactions = allTransactions.filter(t => {
+      const tDate = t.date ? new Date(t.date) : new Date(); 
+      return tDate.getMonth() === (parseInt(month) - 1) && tDate.getFullYear() === parseInt(year);
+    });
+
+    updateSummary();
+    renderChart();
+  }
+
+  function updateSummary() {
+    let income = 0, expense = 0;
+    currentMonthTransactions.forEach(t => {
+      if(t.type === 'income') income += Number(t.amount);
+      else expense += Number(t.amount);
+    });
+    document.getElementById('bdTotalIncome').innerText = income.toLocaleString('en-IN', {minimumFractionDigits: 2});
+    document.getElementById('bdTotalExpense').innerText = expense.toLocaleString('en-IN', {minimumFractionDigits: 2});
+  }
+
+  function renderChart() {
+    document.getElementById('categoryDetailsContainer').style.display = 'none'; // Hide details on render
+    document.getElementById('chartTitle').innerText = currentChartType === 'expense' ? 'Expense Breakdown' : 'Income Breakdown';
+
+    const txs = currentMonthTransactions.filter(t => t.type === currentChartType);
+    const grouped = txs.reduce((acc, t) => {
+      const cat = t.category || "Uncategorized";
+      acc[cat] = (acc[cat] || 0) + Math.abs(t.amount);
+      return acc;
+    }, {});
+
+    const sortedCats = Object.entries(grouped).sort((a, b) => b[1] - a[1]);
+    const labels = sortedCats.map(item => item[0]);
+    const data = sortedCats.map(item => item[1]);
+    const colors = currentChartType === 'expense' ? chartColors : incomeColors;
+
+    const ctx = document.getElementById('interactiveChart').getContext('2d');
+    if (chartInstance) chartInstance.destroy();
+
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{ data: data, backgroundColor: colors, borderWidth: 4, hoverOffset: 10 }]
+      },
+      // UPDATED OPTIONS: Legend positioned right, centered, with circular points
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false, 
+        cutout: '70%', 
+        plugins: { 
+          legend: { 
+            position: 'right',
+            align: 'center',
+            labels: { 
+              padding: 15, 
+              usePointStyle: true,
+              pointStyle: 'circle',
+              font: { size: 14, family: "'Segoe UI', sans-serif" } 
+            } 
+          } 
+        },
+        onClick: (event, elements) => {
+          if (elements.length > 0) {
+            const index = elements[0].index;
+            const category = labels[index];
+            const color = colors[index % colors.length];
+            showCategoryDetails(category, color);
+          }
+        },
+        onHover: (event, elements) => {
+          event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+        }
+      }
+    });
+  }
+
+  function showCategoryDetails(category, color) {
+    const container = document.getElementById('categoryDetailsContainer');
+    const list = document.getElementById('detailTransactionList');
+    
+    // Filter to only the clicked category
+    const catTxs = currentMonthTransactions.filter(t => t.type === currentChartType && (t.category || "Uncategorized") === category);
+    
+    const total = catTxs.reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    
+    document.getElementById('detailCategoryName').innerText = category + ' Details';
+    document.getElementById('detailCategoryTotal').innerText = 'Total: ₹' + total.toLocaleString('en-IN', {minimumFractionDigits: 2});
+    document.getElementById('detailDot').style.backgroundColor = color;
+
+    let html = '';
+    catTxs.forEach(t => {
+      const d = t.date ? new Date(t.date) : new Date();
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const isIncome = t.type === 'income';
+      const badgeClass = isIncome ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25';
+      const sign = isIncome ? '+' : '-';
+
+      html += `
+        <li class="drilldown-list-item d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded p-2 text-white d-flex align-items-center justify-content-center" style="background-color: ${color}; width: 40px; height: 40px;">
+              <i class="bi bi-receipt"></i>
+            </div>
+            <div>
+              <div class="fw-bold" style="color: #0f172a; font-size: 1.05rem;">${t.description}</div>
+              <small class="text-muted">${dateStr}</small>
+            </div>
+          </div>
+          <span class="badge rounded-pill px-3 py-2 ${badgeClass}" style="font-size: 0.95rem;">${sign}₹${Number(t.amount).toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>
+        </li>`;
+    });
+
+    list.innerHTML = html;
+    container.style.display = 'block';
+    
+    // Smooth scroll down to the details
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Toggle Buttons
+  document.getElementById('btnShowExpenses').addEventListener('click', function() {
+    currentChartType = 'expense';
+    this.classList.add('active');
+    document.getElementById('btnShowIncome').classList.remove('active');
+    renderChart();
+  });
+
+  document.getElementById('btnShowIncome').addEventListener('click', function() {
+    currentChartType = 'income';
+    this.classList.add('active');
+    document.getElementById('btnShowExpenses').classList.remove('active');
+    renderChart();
+  });
+
+  // Boot up
+  initBreakdown();
+</script>
