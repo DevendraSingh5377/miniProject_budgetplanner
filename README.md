@@ -25,6 +25,7 @@ Budget Planner is a dynamic and user-friendly web application designed to help i
 * **Categorization:** Automatically organize transactions by categories (e.g., Salary, Food & Dining, Utilities, Entertainment) with visual icon indicators.
 * **Data Visualization:** An interactive, dynamic doughnut chart that breaks down spending habits by category for quick visual analysis.
 * **Transaction History:** A scrollable, chronologically ordered list of recent transactions with a built-in one-click deletion feature.
+* **Monthly Track:** View and manage income, expenses, and savings on a monthly basis. Users can filter data by month to analyze spending patterns and compare financial performance over time.
 * **Responsive Design:** A clean, modern UI built with custom CSS and Bootstrap that adapts seamlessly to different screen sizes.
 
 ### Tech Stack
