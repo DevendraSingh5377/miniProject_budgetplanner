@@ -15,6 +15,7 @@ Budget Planner is a dynamic and user-friendly web application designed to help i
 | Ankush Singh | 2400520100015 |
 
 ---
+**Project Live URL**: https://budget-planner.duckdns.org/login
 
 ## Project Details
 
