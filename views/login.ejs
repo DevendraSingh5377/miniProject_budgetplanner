@@ -6,12 +6,9 @@
   body.bg-light { 
     background: radial-gradient(circle at 100% 0%, #e6f7f4 0%, transparent 35%),
                 radial-gradient(circle at 0% 100%, #eff6ff 0%, transparent 35%),
-                #f8fafc !important; 
+                #f8fafc !important;
     min-height: 100vh;
     margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   }
 
@@ -28,7 +25,7 @@
 
   /* Left Side: Marketing (Fixed Proportions) */
   .auth-left { 
-    flex: 1; 
+    flex: 1;
     max-width: 650px;
   }
 
@@ -118,7 +115,7 @@
   .feat-card.row-2 .feat-title { margin: 0; font-size: 0.8rem; line-height: 1.3; }
   .feat-desc { font-size: 0.75rem; color: #64748b; margin: 0; line-height: 1.4; }
 
-  /* Right Side: Auth Card (Exact Dimensions) */
+  /* Right Side: Auth Card */
   .auth-right {
     width: 480px;
     flex-shrink: 0;
@@ -204,6 +201,59 @@
   .form-footer a { color: #0f5132; font-weight: 600; text-decoration: none; }
 
   .page-footer { position: fixed; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.75rem; color: #94a3b8; }
+
+  /* --- MOBILE RESPONSIVE FIXES --- */
+  @media (max-width: 992px) {
+    /* Fixes the side-by-side flex issue completely */
+    .page-wrapper {
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      padding-top: 1.5rem;
+    }
+    /* Logo acts normally */
+    .header-brand {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .auth-wrapper {
+      flex-direction: column;
+      gap: 3rem;
+      padding: 0 1rem;
+    }
+    .auth-left {
+      max-width: 100%;
+      text-align: center;
+    }
+    .desc-text {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Brings the cards back and stacks them 2-by-2 or 1-by-1 */
+    .features-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      text-align: left;
+    }
+    .auth-right {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .auth-box {
+      padding: 2rem 1.5rem;
+    }
+    .main-heading { font-size: 2.5rem; }
+    .sub-heading { font-size: 1.8rem; }
+    /* Fixes footer overlap */
+    .page-footer {
+      position: relative !important;
+      bottom: auto !important;
+      margin-top: 3rem;
+      padding-bottom: 1rem;
+    }
+  }
 </style>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
